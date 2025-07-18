@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/684/684908.png" type="image/png" />
-  
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500&display=swap');
 
@@ -36,7 +37,7 @@
       max-width: 95vw;
       max-height: calc(100vh - 60px);
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(10px);
       border-radius: 20px;
       padding: 28px 25px;
       z-index: 1000;
@@ -45,6 +46,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      color: #00ffe1;
     }
     .sidebar-content {
      flex-grow: 1;
@@ -96,8 +98,9 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      color: #f5f5f5;
+      color: #000000;
       transition: all 0.25s ease;
+      font-weight: bold;
     }
 
     .mode-btns button:hover,
@@ -128,10 +131,13 @@
     }
 
     label {
-      color: #ffffff;
+      color: #00ffe1;
       font-size: 14px;
     }
-    
+    .label-dark {
+     color: black !important;
+   }
+
     #coordsBox {
       background: rgba(255, 255, 255, 0.07);
       padding: 14px;
@@ -141,7 +147,22 @@
       color: #b0fdfc;
       border: 1px dashed rgba(255, 255, 255, 0.1);
     }
-
+    #legend{
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 14px;
+        color: #00ffe1;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        max-width: 250px;
+        line-height: 1.5;
+        z-index: 1000;
+    }
     .pulse-ring {
       width: 20px;
       height: 20px;
@@ -215,8 +236,55 @@
     display: block;
     margin-bottom: 5px;
   }
- 
+ #serviceCountBox {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 1001;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #00ffe1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 250px;
+  line-height: 1.5;
+}
+
+#loadingSpinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 18px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#loadingSpinner .spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #00ffe1;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
   </style>
+  
 </head>
 <body>
   <div id="sidebar">
@@ -225,11 +293,11 @@
     <div class="basemap-btns">
       <button class="selected" data-basemap="cartoDark">Carto Dark</button>
       <button data-basemap="esriWorldImagery">Esri Imagery</button>
-      <button data-basemap="osm">OSM</button>
-      <button data-basemap="googleStreets">Google Streets</button>
+      <button class="osmBTN" data-basemap="osm">OSM</button>
+      <button class="googleBTN" data-basemap="googleStreets">Google Streets</button>
     </div>
 
-    <input type="text" id="searchBar" placeholder="🔍 Search a place..." />
+    <input type="text" id="searchBar" placeholder="🔍 Search a place..." aria-label="Search location" />
 
     <div class="mode-btns">
       <button class="selected" data-mode="driving-car">🚗</button>
@@ -268,52 +336,100 @@
 <!-- Add this for error messages -->
 <div id="errorBox" style="color: #ff5555; font-weight: bold; min-height: 1.5em; margin-top: 8px;"></div>
 
-  <button id="resetBtn" style="margin-top: 10px; background:#008cbe; color:#fff; padding:8px; border:none; border-radius:8px; cursor:pointer;">Reset Map</button>
+  <button id="resetBtn" style="margin-top: 10px; background:#00ffe1; color:#000000; padding:8px; border:none; border-radius:8px; cursor:pointer;">Reset Map</button>
 
   </div>
-<div id="legend" style="position:absolute; bottom:30px; right:30px; background: rgba(0,0,0,0.5); padding:10px; border-radius:10px; color:#00ffe1; font-size:14px; z-index:1000; max-width: 220px; line-height: 1.4;">
+<div id="legend">
   <strong>Legend</strong><br>
-  🟢 ATM Locations<br>
-  🔵 Bank Locations<br>
-  🟡 Cinemas<br>
-  🟠 Fuel Stations<br>
-  🔴 Hospitals<br>
-  🟣 Pharmacies<br>
-  🌸 Police Stations<br>
-  ⚪ Schools
+  <div class="legend-item" data-layer="ATM">🟢 ATM Locations</div>
+  <div class="legend-item" data-layer="Bank">🔵 Bank Locations</div>
+  <div class="legend-item" data-layer="Cinema">🟠 Cinemas</div>
+  <div class="legend-item" data-layer="Fuel">🟡 Fuel Stations</div>
+  <div class="legend-item" data-layer="Hospital">🔴 Hospitals</div>
+  <div class="legend-item" data-layer="Pharmacy">🟣 Pharmacies</div>
+  <div class="legend-item" data-layer="Police">🌸 Police Stations</div>
+  <div class="legend-item" data-layer="School">⚪ Schools</div>
 </div>
+
+<div id="serviceCountBox">
+  <div><strong>Mode:</strong> <span id="selectedModeDisplay">🚗 Driving</span></div>
+  <div><strong>Range:</strong> <span id="selectedRangeDisplay">15 minutes</span></div>
+  <hr style="border-color: rgba(0, 255, 225, 0.3); margin: 8px 0;">
+  <strong>📊 Services in Area:</strong><br>
+  <div id="serviceCounts"></div>
+</div>
+
 
 <div id="map"></div>
 <div id="pulseContainer"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 
+document.querySelectorAll('.basemap-btns button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const selectedBase = btn.getAttribute('data-basemap');
+    const legend = document.getElementById('legend');
+    const serviceBox = document.getElementById('serviceCountBox');
+    const labels = document.querySelectorAll('.input-group label');
+    const labels2 = document.querySelectorAll('.switcher label');  // Select all labels inside input-group
+    const heading = document.querySelector('h1');
+    const h3 = document.querySelector('h3');
+    const coordsBox=document.getElementById('coordsBox');
+    const baseBTN=document.querySelector('basemap-btns');
+    if (selectedBase === 'osm' || selectedBase === 'googleStreets') {
+      legend.style.color = 'black';
+      serviceBox.style.color = 'black';
+      heading.style.color = 'black';
+      h3.style.color = 'black';
+      coordsBox.style.color='black';
+      labels.forEach(label => {
+        label.style.setProperty('color', 'black', 'important'); // Force override CSS
+      });
+      labels2.forEach(label => {
+        label.style.setProperty('color', 'black', 'important'); // Force override CSS
+      });
+      
+    } else {
+      legend.style.color = '#00ffe1'; // your preferred light color
+      serviceBox.style.color = '#00ffe1';
+      heading.style.color = '#00ffe1';
+      h3.style.color='#00ffe1';
+      coordsBox.style.color='#00ffe1';
+      labels.forEach(label => {
+        label.style.removeProperty('color'); // Remove inline style to fallback to CSS color (#00ffe1)
+      });
+      labels2.forEach(label => {
+        label.style.removeProperty('color'); // Remove inline style to fallback to CSS color (#00ffe1)
+      });
+      
+    }
+  });
+});
+
+
   function showError(msg) {
   const box = document.getElementById('errorBox');
   box.textContent = msg;
   setTimeout(() => { box.textContent = ''; }, 4000);
 }
-    function showLoading(show) {
+
+function showLoading(show) {
   let loader = document.getElementById('loadingSpinner');
-  if (!loader) {
-    loader = document.createElement('div');
-    loader.id = 'loadingSpinner';
-    loader.style = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      font-size: 18px;
-      z-index: 2000;
-    `;
-    loader.innerText = 'Loading...';
+  if (show) {
+    if (!loader) {
+      loader = document.createElement('div');
+      loader.id = 'loadingSpinner';
+      loader.innerHTML = `<div class="spinner"></div> Loading...`;
       document.body.appendChild(loader);
     }
+  } else {
+    if (loader) {
+      loader.remove();
+    }
   }
+}
+
+
 
   // Base Maps
   const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -375,51 +491,64 @@ const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&
   const overlayMaps = {};
   let defaultLayers = [];
 
-  function setupToggle(checkboxId, layer) {
-  const checkbox = document.getElementById(checkboxId);
-  if (!checkbox) return;
-
-  if (checkbox.checked) {
-    layer.addTo(map);
-  }
-
-  checkbox.addEventListener('change', () => {
-    if (checkbox.checked) {
-      layer.addTo(map);
-    } else {
-      map.removeLayer(layer);
-    }
-  });
-}
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (isochroneLayer) map.removeLayer(isochroneLayer);
   if (clickMarker) map.removeLayer(clickMarker);
   document.getElementById('coordsBox').innerText = '📍 Click a location';
   document.getElementById('searchBar').value = '';
+    // Reset serviceCountBox content:
+  document.getElementById('selectedModeDisplay').textContent = '🚗 Driving';  // default mode text
+  document.getElementById('selectedRangeDisplay').textContent = '15 minutes'; // default range text
+  document.getElementById('serviceCounts').innerHTML = '';  
 });
 const loadedGeoJsonLayers = {};  // <-- This will store all geojson layers by name
 
-Promise.all(
-  layersInfo.map(info =>
-    createGeoJsonLayer(info.url, info.name, {
-      radius: 6,
-      fillColor: info.color,
-      color: info.color,
-      weight: 1,
-      opacity: 1,
-      fillOpacity: 0.8
-    }, 'name').then(layer => {
-      overlayMaps[`🏷️ ${info.name}`] = layer;
-      loadedGeoJsonLayers[info.name] = layer;  // Save by name
-      setupToggle(info.id, layer);
 
-      if (info.name === 'ATM' || info.name === 'Hospital') {
-        layer.addTo(map);
-        defaultLayers.push(layer);
+
+// This function loads a layer when called
+async function loadLayer(info) {
+  const layer = await createGeoJsonLayer(info.url, info.name, {
+    radius: 6,
+    fillColor: info.color,
+    color: info.color,
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+  }, 'name');
+  loadedGeoJsonLayers[info.name] = layer;
+  map.addLayer(layer);
+  overlayMaps[`🏷️ ${info.name}`] = layer;
+}
+
+// This sets up the lazy toggle for each checkbox
+function lazyLoadAndToggleLayer(info) {
+  const checkbox = document.getElementById(info.id);
+  if (!checkbox) return;
+
+  // Load immediately if checkbox is checked at load time
+  if (checkbox.checked) {
+    loadLayer(info);
+  }
+
+  checkbox.addEventListener('change', async () => {
+    if (checkbox.checked) {
+      if (!loadedGeoJsonLayers[info.name]) {
+        await loadLayer(info); // Load and show
+      } else {
+        map.addLayer(loadedGeoJsonLayers[info.name]); // Just show
       }
-    })
-  )
-);
+    } else {
+      const layer = loadedGeoJsonLayers[info.name];
+      if (layer) map.removeLayer(layer);
+    }
+  });
+}
+
+// Loop through all layer info to set up toggle logic
+layersInfo.forEach(info => {
+  lazyLoadAndToggleLayer(info);
+});
+
 
 
   // --- Basemap switch buttons ---
@@ -531,7 +660,7 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
       range_type: rangeType,
       attributes: ['area'],
     };
-
+    showLoading(true);
     try {
       const res = await fetch(`https://api.openrouteservice.org/v2/isochrones/${selectedMode}`, {
         method: 'POST',
@@ -551,12 +680,140 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
           dashArray: '6 4',
         }
       }).addTo(map);
+      countPointsInIsochrone(isochroneLayer);
     } catch (err) {
-      showLoading(false);
-      error('⚠️ Failed to load isochrone.');
+      showError('⚠️ Failed to load isochrone.');
       console.error(err);
+    } finally {
+      showLoading(false);
     }
   }
+
+
+function countPointsInIsochrone(isoLayer) {
+  const counts = {};
+  const isoFeature = isoLayer.toGeoJSON().features[0];
+
+  Object.entries(loadedGeoJsonLayers).forEach(([name, layer]) => {
+    let count = 0;
+    layer.eachLayer(pt => {
+      if (
+        pt.feature && pt.getLatLng &&
+        turf.booleanPointInPolygon(
+          turf.point([pt.getLatLng().lng, pt.getLatLng().lat]),
+          isoFeature
+        )
+      ) {
+        count++;
+      }
+    });
+    counts[name] = count;
+  });
+
+  // Calculate area in km²
+  const areaSqMeters = turf.area(isoFeature);
+  const areaKm2 = (areaSqMeters / 1_000_000).toFixed(2);
+
+  // Calculate perimeter in km
+  const perimeterKm = turf.length(turf.polygonToLine(isoFeature), { units: 'kilometers' }).toFixed(2);
+
+  displayCounts(counts, areaKm2, perimeterKm);
+}
+
+function displayCounts(counts, areaKm2, perimeterKm) {
+  const container = document.getElementById("serviceCounts");
+  container.innerHTML = ""; // Clear previous
+
+  // Display counts per service
+  for (let [service, count] of Object.entries(counts)) {
+    const emoji = {
+      ATM: "🟢", Bank: "🔵", Cinema: "🟠", Fuel: "🟡",
+      Hospital: "🔴", Pharmacy: "🟣", Police: "🌸", School: "⚪"
+    }[service] || "🔹";
+    container.innerHTML += `${emoji} ${service}: ${count}<br>`;
+  }
+
+  // Display area and perimeter info
+  container.innerHTML += `<hr>`;
+  container.innerHTML += `<b>Isochrone Area:</b> ${areaKm2} km²<br>`;
+  container.innerHTML += `<b>Isochrone Perimeter:</b> ${perimeterKm} km<br>`;
+}
+
+
+function updateModeAndRangeDisplay() {
+  // Show Mode with emoji and label
+  const modeLabels = {
+    'driving-car': '🚗 Driving',
+    'cycling-regular': '🚴 Cycling',
+    'foot-walking': '🚶 Walking'
+  };
+  document.getElementById('selectedModeDisplay').textContent = modeLabels[selectedMode] || selectedMode;
+
+  // Show Range with units
+  const rangeType = document.querySelector('input[name="rangeType"]:checked').value;
+  let rangeText = '';
+  if (rangeType === 'time') {
+    const timeVal = parseInt(document.getElementById('timeInput').value);
+    rangeText = `${timeVal} minute${timeVal > 1 ? 's' : ''}`;
+  } else {
+    const distVal = parseInt(document.getElementById('distanceInput').value);
+    rangeText = `${distVal} meter${distVal > 1 ? 's' : ''}`;
+  }
+  document.getElementById('selectedRangeDisplay').textContent = rangeText;
+}
+
+
+function updateLegend() {
+  layersInfo.forEach(({name, id}) => {
+    const checkbox = document.getElementById(id);
+    const legendItem = document.querySelector(`#legend .legend-item[data-layer="${name}"]`);
+    if (checkbox && legendItem) {
+      legendItem.style.display = checkbox.checked ? 'block' : 'none';
+    }
+  });
+}
+
+layersInfo.forEach(({id}) => {
+  const checkbox = document.getElementById(id);
+  if (checkbox) {
+    checkbox.addEventListener('change', updateLegend);
+  }
+});
+
+// Also call it once after initial load to sync legend with default visible layers
+updateLegend();
+
+
+// Update display on mode change
+document.querySelectorAll('.mode-btns button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Existing code to update mode selection
+    document.querySelectorAll('.mode-btns button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMode = btn.dataset.mode;
+
+    updateModeAndRangeDisplay();
+  });
+});
+
+// Update display on range type change
+document.getElementsByName('rangeType').forEach(input => {
+  input.addEventListener('change', () => {
+    const type = document.querySelector('input[name="rangeType"]:checked').value;
+    document.getElementById('timeInputGroup').style.display = type === 'time' ? 'block' : 'none';
+    document.getElementById('distanceInputGroup').style.display = type === 'distance' ? 'block' : 'none';
+
+    updateModeAndRangeDisplay();
+  });
+});
+
+// Update display on time input change
+document.getElementById('timeInput').addEventListener('input', updateModeAndRangeDisplay);
+
+// Update display on distance input change
+document.getElementById('distanceInput').addEventListener('input', updateModeAndRangeDisplay);
+
+
   function createPulse(point) {
       const pulse = document.createElement('div');
       pulse.className = 'pulse-ring';
@@ -598,6 +855,8 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     showError("⚠️ Geolocation not supported by your browser.");
   }
 });
+updateModeAndRangeDisplay();
+
 </script>
 
 </body>
