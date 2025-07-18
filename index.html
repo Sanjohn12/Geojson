@@ -149,7 +149,16 @@
       pointer-events: none;
       z-index: 30;
     }
-
+  .hidden {
+  margin: 0;
+  width: 40rem;
+  height: 10rem;
+  position: fixed;
+  bottom: 1rem;
+  right: 0rem;
+  background-color: #000;
+  z-index: 30; 
+}
   </style>
 </head>
 <body>
@@ -168,7 +177,7 @@
 <button class="water-button" id="waterBtn" onclick="openLocalPage()">Explore Now</button>
   <!-- Smoke particle canvas -->
   <canvas id="smoke-canvas"></canvas>
-
+ <div class="hidden"></div>
   <script>
     // Rotating text code
     function openLocalPage() {
