@@ -645,7 +645,7 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
       fillColor: '#00ffe1',
       fillOpacity: 1,
     }).addTo(map);
-    map.setView([lat, lng], 8);
+    map.flyTo([lat, lng], 13);
     createPulse(e.containerPoint);
 
     if (isochroneLayer) map.removeLayer(isochroneLayer);
