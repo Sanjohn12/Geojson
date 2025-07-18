@@ -357,6 +357,7 @@
   <hr style="border-color: rgba(0, 255, 225, 0.3); margin: 8px 0;">
   <strong>📊 Services in Area:</strong><br>
   <div id="serviceCounts"></div>
+  <center><button id="shareBtn" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:8px; border:none; border-radius:10px; cursor:pointer;">📤 Share Results</button></center>
 </div>
 
 
@@ -762,7 +763,45 @@ function updateModeAndRangeDisplay() {
   document.getElementById('selectedRangeDisplay').textContent = rangeText;
 }
 
+document.getElementById('shareBtn').addEventListener('click', () => {
+  const mode = document.getElementById('selectedModeDisplay').textContent.trim();
+  const range = document.getElementById('selectedRangeDisplay').textContent.trim();
+  const serviceSummary = document.getElementById('serviceCounts').innerText.trim();
 
+  let originText = "Origin Location: Not selected";
+  if (clickMarker) {
+    const lat = clickMarker.getLatLng().lat.toFixed(5);
+    const lng = clickMarker.getLatLng().lng.toFixed(5);
+    originText = `Origin Location: 📌 Lat: ${lat} | Lng: ${lng}`;
+  }
+
+  const shareText = `${originText}\nMode: ${mode}\nRange: ${range}\n📊 Services in Area:\n${serviceSummary}`;
+
+  const errorBox = document.getElementById('errorBox');
+
+  // Open WhatsApp immediately
+  const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(shareText);
+  window.open(whatsappUrl, '_blank');
+
+  // Copy to clipboard and show message in errorBox instead of alert
+  navigator.clipboard.writeText(shareText)
+    .then(() => {
+      errorBox.style.color = "#00ffcc";   // nice green/teal for success
+      errorBox.textContent = "📋 Results copied to clipboard! You can paste them anywhere.";
+      
+      // Clear message after 5 seconds
+      setTimeout(() => { errorBox.textContent = ""; }, 5000);
+    })
+    .catch(err => {
+      errorBox.style.color = "#ff5555";  // red for error
+      errorBox.textContent = "❌ Failed to copy results. Please try manually.";
+      
+      setTimeout(() => { errorBox.textContent = ""; }, 5000);
+      console.error("Copy failed", err);
+    });
+});
+
+  
 function updateLegend() {
   layersInfo.forEach(({name, id}) => {
     const checkbox = document.getElementById(id);
