@@ -2,168 +2,208 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Accessibility Planner</title>
+  
+  <title>City Planner</title>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/684/684908.png" type="image/png" />
   <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background-color: black;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
     }
 
-    iframe {
-      width: 100vw;
-      height: 100vh;
-      border: none;
-    }
-
-    .overlay {
-      position: relative;
+    body, html {
       width: 100%;
       height: 100%;
-      top: 10%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      color: white;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      position: relative;
     }
 
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-
-.heading {
-  position: relative;
-  top: -40%;
-  text-align: center;
-  font-size: 2.5rem;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 1000;
-  background: linear-gradient(90deg, #00f2fe, #ffffff, #00f2fe);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientShift 7s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-  100% {
-    background-position: 0% center;
-  }
-}
-
-
-    .water-button {
-  position: relative;
-  text-align: center;
-  top: 30%;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  overflow: hidden;
-  box-shadow: 0 0 15px #00f2fe;
-  transition: transform 0.2s ease;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-.water-button::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300%;
-  height: 300%;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.6s ease;
-}
-
-.water-button:active::after {
-  transform: translate(-50%, -50%) scale(1);
-  transition: 0s;
-}
-
-.water-button:hover {
-  transform: scale(1.05);
-}
-
-/* Heartbeat Animation */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 10px #00f2fe;
-  }
-  50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px #00f2fe;
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 10px #00f2fe;
-  }
-}
-
-
-
-    .box {
+    /* Spline 3D iframe background */
+    .background-3d {
       position: absolute;
-      bottom: 1rem;
-      right: 2rem;
-      width: 200px;
-      height: 100px;
-      background-color: rgb(0, 0, 0);
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* Container for content */
+    .content {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      perspective: 1000px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* Rotating box */
+    .flip-box {
+      width: 60rem;
+      height: 30rem;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+      position: relative;
+      text-align: center;
+    }
+
+    .flip-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      font-size: 2.5rem;
+      font-weight: 1000;
+      background: linear-gradient(90deg, #00f2fe, #ffffff, #00f2fe);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 7s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backface-visibility: hidden;
+    }
+
+    .flip-face.back {
+      transform: rotateX(180deg);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+      100% { background-position: 0% center; }
+    }
+
+    /* Button styles */
+    .water-button {
+        text-align: center;
+        top: 80%;
+        left: 47%;
+      position: relative;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 0 15px #00f2fe;
+      transition: transform 0.2s ease;
+      animation: pulse 1.5s infinite ease-in-out;
       z-index: 20;
     }
 
-    .btn {
-      position: relative;
-      bottom: -15%;
-      width: fit-content;
-      height: fit-content;
-      text-align: center;
-      left: 47%;
+    .water-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+      z-index: -1;
     }
 
+    .water-button:active::after {
+      transform: translate(-50%, -50%) scale(1);
+      transition: 0s;
+    }
+
+    .water-button:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #00f2fe;
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 20px #00f2fe;
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #00f2fe;
+      }
+    }
+
+    /* Smoke canvas on top, but pointer-events none so it doesn't block */
     canvas#smoke-canvas {
       position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 500;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
+      z-index: 30;
     }
+
   </style>
 </head>
 <body>
-  <iframe src="https://my.spline.design/robotfollowcursorforlandingpage-5r6cxpMbndWVksaJBveSyhAL/" allowfullscreen></iframe>
 
+  <!-- Spline 3D background -->
+  <iframe class="background-3d" src="https://my.spline.design/robotfollowcursorforlandingpage-5r6cxpMbndWVksaJBveSyhAL/" frameborder="0" allowfullscreen></iframe>
+
+  <!-- Content (rotating box + button) -->
+  <div class="content">
+    <div class="flip-box" id="flipBox">
+      <div class="flip-face front" id="frontFace">Welcome to the City Planner</div>
+      <div class="flip-face back" id="backFace">Set a time</div>
+    </div>
+    
+  </div>
+<button class="water-button" id="waterBtn" onclick="openLocalPage()">Explore Now</button>
+  <!-- Smoke particle canvas -->
   <canvas id="smoke-canvas"></canvas>
 
-  <div class="overlay">
-    <div class="heading">Welcome To The City Planner</div>
-    <div class="btn"><button class="water-button" onclick="openLocalPage()">Explore Now</button></div> 
-  </div>
-
-  <div class="box"></div>
-
   <script>
+    // Rotating text code
     function openLocalPage() {
-      window.location.href = "geojsonweb.html";
+      window.location.href = "testing.html";
     }
+    const messages = [
+  "Welcome to City Planner — Your Urban Exploration Starts Here",
+  "Choose a Time to Explore",
+  "Select Your Travel Mode",
+  "Tap on the Map to Begin",
+  "Discover Nearby Services Effortlessly"
+];
 
-    // Smoke cursor effect
+
+    let index = 0;
+    let flipped = false;
+
+    const box = document.getElementById("flipBox");
+    const front = document.getElementById("frontFace");
+    const back = document.getElementById("backFace");
+
+    setInterval(() => {
+      index = (index + 1) % messages.length;
+      flipped = !flipped;
+
+      box.style.transform = `rotateX(${flipped ? 180 : 0}deg)`;
+
+      if (flipped) {
+        back.textContent = messages[index];
+      } else {
+        front.textContent = messages[index];
+      }
+    }, 2000);
+
+    // Smoke particle effect only on button hover
     const canvas = document.getElementById("smoke-canvas");
     const ctx = canvas.getContext("2d");
     let width = window.innerWidth;
@@ -171,50 +211,47 @@
     canvas.width = width;
     canvas.height = height;
 
-  const particles = [];
+    const particles = [];
 
     const colors = [
-  '255, 0, 0',      // bright red
-  '255, 165, 0',    // orange
-  '255, 255, 0',    // yellow
-  '0, 255, 0',      // bright green
-  '0, 255, 255',    // cyan
-  '0, 0, 255',      // blue
-  '255, 0, 255',    // magenta
-];
+      '255, 0, 0',      // bright red
+      '255, 165, 0',    // orange
+      '255, 255, 0',    // yellow
+      '0, 255, 0',      // bright green
+      '0, 255, 255',    // cyan
+      '0, 0, 255',      // blue
+      '255, 0, 255',    // magenta
+    ];
 
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 8 + 4;
+        this.opacity = 1;
+        this.dx = Math.random() * 2 - 1;
+        this.dy = Math.random() * -1.5 - 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
 
-class Particle {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.radius = Math.random() * 8 + 4;
-    this.opacity = 1;
-    this.dx = Math.random() * 2 - 1;
-    this.dy = Math.random() * -1.5 - 1;
-    this.color = colors[Math.floor(Math.random() * colors.length)];
-  }
+      draw() {
+        let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 1.2);
+        gradient.addColorStop(0, `rgba(${this.color}, ${Math.min(this.opacity * 1.2, 1)})`);
+        gradient.addColorStop(1, `rgba(${this.color}, 0)`);
 
-  draw() {
-  let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 1.2);
-  gradient.addColorStop(0, `rgba(${this.color}, ${Math.min(this.opacity * 1.2, 1)})`);  // center more opaque, max 1
-  gradient.addColorStop(1, `rgba(${this.color}, 0)`);
-  
-  ctx.beginPath();
-  ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-  ctx.fillStyle = gradient;
-  ctx.fill();
-  ctx.closePath();
-}
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        ctx.closePath();
+      }
 
-
-  update() {
-  this.x += this.dx;
-  this.y += this.dy;
-  this.opacity -= 0.01;  // slower fade
-}
-
-}
+      update() {
+        this.x += this.dx;
+        this.y += this.dy;
+        this.opacity -= 0.01;
+      }
+    }
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
@@ -229,15 +266,16 @@ class Particle {
 
     animate();
 
-    const button = document.querySelector('.water-button');
+    // Only add particle effect on button hover (mousemove over button)
+    const button = document.getElementById('waterBtn');
 
-button.addEventListener('mousemove', (e) => {
-  for (let i = 0; i < 3; i++) {
-    particles.push(new Particle(e.clientX, e.clientY));
-  }
-});
+    button.addEventListener('mousemove', (e) => {
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(e.clientX, e.clientY));
+      }
+    });
 
-
+    // Resize canvas on window resize
     window.addEventListener("resize", () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -245,5 +283,6 @@ button.addEventListener('mousemove', (e) => {
       canvas.height = height;
     });
   </script>
+
 </body>
 </html>
