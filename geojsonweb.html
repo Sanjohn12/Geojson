@@ -731,7 +731,8 @@ async function handleMapClick(e) {
     // Pre-filled Google Form link
     const serviceType = encodeURIComponent("🟢 ATM Locations");
     const comment = encodeURIComponent("Add comment here");
-    const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScnD65unZO9KgMvoBM046LQCSAIsHgSjg71WQB5Gc6Q8w6ArQ/viewform?usp=pp_url&entry.1368569100=${serviceType}&entry.1093015021=${lat}&entry.690671791=${lng}&entry.92242434=${comment}`;
+    const serviceArea = encodeURIComponent("Kalmunai");
+    const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScnD65unZO9KgMvoBM046LQCSAIsHgSjg71WQB5Gc6Q8w6ArQ/viewform?usp=pp_url&entry.1368569100=${serviceType}&entry.1093015021=${lat}&entry.690671791=${lng}&entry.92242434=${comment}&entry.258777224=${serviceArea}`;
     
     window.open(formUrl, '_blank');
     return;
