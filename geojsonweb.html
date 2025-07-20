@@ -30,22 +30,22 @@
     }
 
      #sidebar {
-      position: fixed;      /* better for sidebar, stays in place when scrolling */
-      top: 0;              /* stick to very top */
-      left: 0;             /* stick to left edge */
+      position: absolute;      /* better for sidebar, stays in place when scrolling */
+      top: 20px;              /* stick to very top */
+      left: 20px;             /* stick to left edge */
       height: auto;       /* full viewport height */
-      width: 330px;        /* your desired width */
+      width: 350px;        /* your desired width */
       max-width: 95vw;     /* still keep max width for smaller screens */
       background: rgba(255, 255, 255, 0.05);
      backdrop-filter: blur(10px);
      border-radius: 0 20px 20px 0;  /* round only right corners */
      padding: 28px 25px;
      z-index: 1000;
-     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
      overflow-y: auto;
      display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
     color: #00ffe1;
     max-height: 100vh;
    overflow: visible;
@@ -55,7 +55,7 @@
      overflow-y: auto;
      display: flex;
      flex-direction: column;
-     gap: 16px;
+     gap: 10px;
 }
 
     h1 {
