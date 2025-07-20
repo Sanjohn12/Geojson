@@ -883,7 +883,8 @@ async function handleMapClick(e) {
 document.getElementById('reportServiceBtn').addEventListener('click', () => {
   reportMode = true;
   alert('📍 Click on the map to report the missing service location.');
-
+  document.getElementById('errorBox').style.color = '#D32F2F';
+  document.getElementById('errorBox').innerHTML = '📝 Click on the map to report a missing service (ATM, bus stop, etc). A form will open with the location auto-filled.';
   // Highlight report button (green), reset find button (blue)
   document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
   document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
@@ -891,7 +892,7 @@ document.getElementById('reportServiceBtn').addEventListener('click', () => {
 
 document.getElementById('findServiceBtn').addEventListener('click', () => {
   reportMode = false;
-
+  alert('📍 Click on the map to Find Service Locations');
   // Highlight find button (green), reset report button (blue)
   document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
   document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
