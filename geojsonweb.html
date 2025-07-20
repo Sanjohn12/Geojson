@@ -29,25 +29,25 @@
       z-index: 0;
     }
 
-    #sidebar {
-      position: absolute;
-      top: 30px;
-      left: 30px;
-      width: 330px;
-      max-width: 95vw;
-      max-height: calc(100vh - 60px);
+     #sidebar {
+      position: fixed;      /* better for sidebar, stays in place when scrolling */
+      top: 0;              /* stick to very top */
+      left: 0;             /* stick to left edge */
+      height: 100vh;       /* full viewport height */
+      width: 330px;        /* your desired width */
+      max-width: 95vw;     /* still keep max width for smaller screens */
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 28px 25px;
-      z-index: 1000;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      color: #00ffe1;
-    }
+     backdrop-filter: blur(10px);
+     border-radius: 0 20px 20px 0;  /* round only right corners */
+     padding: 28px 25px;
+     z-index: 1000;
+     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+     overflow-y: auto;
+     display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: #00ffe1;
+}
     .sidebar-content {
      flex-grow: 1;
      overflow-y: auto;
@@ -185,12 +185,16 @@
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       #sidebar {
         width: 90%;
         left: 5%;
         top: 20px;
         padding: 20px;
+        #legend, #serviceCountBox {
+        max-width: 90vw;
+        right: 5vw;
+        }
       }
 
       .mode-btns button,
@@ -335,7 +339,7 @@
 
 <!-- Add this for error messages -->
 <div id="errorBox" style="color: #ff5555; font-weight: bold; min-height: 1.5em; margin-top: 8px;"></div>
-
+<button id="locateBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:8px; border:none; border-radius:8px; cursor:pointer;">📍 Show My Location</button>
   <button id="resetBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:8px; border:none; border-radius:8px; cursor:pointer;">Reset Map</button>
 
   </div>
@@ -365,7 +369,54 @@
 <div id="pulseContainer"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+ let userLocationMarker = null;
 
+document.getElementById('locateBtn').addEventListener('click', () => {
+  const errorBox = document.getElementById('errorBox');
+
+  if (!navigator.geolocation) {
+    errorBox.style.color = "#ff5555"; // red for error
+    errorBox.textContent = 'Geolocation is not supported by your browser.';
+    setTimeout(() => { errorBox.textContent = ''; }, 4000);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Fly to user location
+      map.flyTo([lat, lng], 15);
+
+      // Add or update marker
+      if (userLocationMarker) {
+        userLocationMarker.setLatLng([lat, lng]);
+      } else {
+        userLocationMarker = L.marker([lat, lng], {
+          title: 'Your Location',
+          icon: L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+          }),
+        }).addTo(map);
+      }
+
+      userLocationMarker.bindPopup('You are here!').openPopup();
+
+      // Show success message in errorBox with green/teal color
+      errorBox.style.color = "#00ffcc"; // success color
+      errorBox.textContent = "📍 Location found!";
+      setTimeout(() => { errorBox.textContent = ''; }, 4000);
+    },
+    (err) => {
+      errorBox.style.color = "#ff5555"; // error color
+      errorBox.textContent = 'Unable to retrieve your location: ' + err.message;
+      setTimeout(() => { errorBox.textContent = ''; }, 4000);
+    }
+  );
+});
 document.querySelectorAll('.basemap-btns button').forEach(btn => {
   btn.addEventListener('click', () => {
     const selectedBase = btn.getAttribute('data-basemap');
