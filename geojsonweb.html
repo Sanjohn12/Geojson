@@ -293,6 +293,79 @@
   text-align: center;
   line-height: 24px;
 }
+
+#sidebar2{ 
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: fit-content;
+      max-width: 100%;
+      background-color: #2c2f48;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s ease;
+      transform: translateX(100%);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #sidebar2.open { 
+      transform: translateX(0);
+    }
+
+    #sidebarHeader2 { 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background-color: #23263a;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    #closeSidebarBtn {
+      font-size: 22px;
+      background: none;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    #closeSidebarBtn:hover {
+      color: red;
+    }
+
+    #sidebar2 iframe { 
+      width: 1200px; /* width matching Google Sheet layout */
+      max-width: 100vw;
+      height: 100%;
+      border: none;
+    }
+
+    #overlay2 {
+      position: fixed;
+      display: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      transition: 0.3s ease;
+    }
+
+    #overlay2.active {
+      display: block;
+    }
+
+    @media (max-width: 1280px) {
+      #sidebar2 iframe {
+        width: 100vw;
+      }
+    }
   </style>
   
 </head>
@@ -370,8 +443,20 @@
   <strong>📊 Services in Area:</strong><br>
   <div id="serviceCounts"></div>
   <center><button id="shareBtn" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:8px; border:none; border-radius:10px; cursor:pointer;">📤 Share Results</button></center>
+  <center><button id="openSidebarBtn" onclick="openSidebar()" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:5px; border:none; border-radius:7px; cursor:pointer;"> 📝 Show Reports </button></center>
 </div>
 
+  <div id="overlay2" onclick="closeSidebar()"></div>
+
+  <div id="sidebar2">
+    <div id="sidebarHeader2">
+      <span>📑 Report Sheet</span>
+      <button id="closeSidebarBtn" onclick="closeSidebar()">×</button>
+    </div>
+    <iframe 
+      src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5Y3GXyanZrjIUDhra31v8WynS_deRs5V5Kf9WaPIArguuA6TwL2chYApjYb8FNSigb1Jo2-JaV1G8/pubhtml?widget=true&amp;headers=false">
+    </iframe>
+  </div>
 
 <div id="map"></div>
 <div id="pulseContainer"></div>
@@ -1017,7 +1102,15 @@ document.getElementById('distanceInput').addEventListener('input', updateModeAnd
   }
 });
 updateModeAndRangeDisplay();
+   function openSidebar() {
+      document.getElementById("sidebar").classList.add("open");
+      document.getElementById("overlay").classList.add("active");
+    }
 
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("overlay").classList.remove("active");
+    }
 </script>
 
 </body>
