@@ -546,6 +546,10 @@ const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (isochroneLayer) map.removeLayer(isochroneLayer);
   if (clickMarker) map.removeLayer(clickMarker);
+  if (userLocationMarker) {
+    map.removeLayer(userLocationMarker);
+    userLocationMarker = null; // clear user location marker
+  }
   document.getElementById('coordsBox').innerText = '📍 Click a location';
   document.getElementById('searchBar').value = '';
     // Reset serviceCountBox content:
