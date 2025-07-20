@@ -156,8 +156,8 @@
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 10px;
+        border-radius: 16px;
+        padding: 16px 20px;
         font-size: 14px;
         color: #00ffe1;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -388,9 +388,10 @@ document.getElementById('locateBtn').addEventListener('click', () => {
     setTimeout(() => { errorBox.textContent = ''; }, 4000);
     return;
   }
-
+   showLoading(true);
   navigator.geolocation.getCurrentPosition(
     (position) => {
+      showLoading(false);
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
@@ -414,11 +415,12 @@ document.getElementById('locateBtn').addEventListener('click', () => {
       userLocationMarker.bindPopup('You are here!').openPopup();
 
       // Show success message in errorBox with green/teal color
-      errorBox.style.color = "#00ffcc"; // success color
+      errorBox.style.color = "#00FF00"; // success color
       errorBox.textContent = "📍 Location found!";
       setTimeout(() => { errorBox.textContent = ''; }, 4000);
     },
     (err) => {
+      showLoading(false);
       errorBox.style.color = "#ff5555"; // error color
       errorBox.textContent = 'Unable to retrieve your location: ' + err.message;
       setTimeout(() => { errorBox.textContent = ''; }, 4000);
