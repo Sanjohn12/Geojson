@@ -689,65 +689,121 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
   });
 
   // --- Isochrone ---
-  let isochroneLayer, clickMarker;
-  map.on('click', handleMapClick);
+ let isochroneLayer, clickMarker;
+let reportMode = false;
 
-  async function handleMapClick(e) {
-    const lat = e.latlng.lat;
-    const lng = e.latlng.lng;
-    document.getElementById('coordsBox').innerText = `📌 Lat: ${lat.toFixed(5)} | Lng: ${lng.toFixed(5)}`;
+document.getElementById('reportServiceBtn').addEventListener('click', () => {
+  reportMode = true;
+  alert('📍 Click on the map to report the missing service location.');
+});
 
-    if (clickMarker) map.removeLayer(clickMarker);
-    clickMarker = L.circleMarker([lat, lng], {
-      radius: 6,
-      color: '#00ffe1',
-      fillColor: '#00ffe1',
-      fillOpacity: 1,
-    }).addTo(map);
-    map.flyTo([lat, lng], 13);
-    createPulse(e.containerPoint);
+document.getElementById('findServiceBtn').addEventListener('click', () => {
+  reportMode = false;
+});
 
-    if (isochroneLayer) map.removeLayer(isochroneLayer);
+map.on('click', handleMapClick);
 
-    const rangeType = document.querySelector('input[name="rangeType"]:checked').value;
-    const range = rangeType === 'time'
-      ? parseInt(document.getElementById('timeInput').value) * 60
-      : parseInt(document.getElementById('distanceInput').value);
+async function handleMapClick(e) {
+  const lat = e.latlng.lat.toFixed(5);
+  const lng = e.latlng.lng.toFixed(5);
+  document.getElementById('coordsBox').innerText = `📌 Lat: ${lat} | Lng: ${lng}`;
 
-    const body = {
-      locations: [[lng, lat]],
-      range: [range],
-      range_type: rangeType,
-      attributes: ['area'],
-    };
-    showLoading(true);
-    try {
-      const res = await fetch(`https://api.openrouteservice.org/v2/isochrones/${selectedMode}`, {
-        method: 'POST',
-        headers: {
-          Authorization: apiKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      isochroneLayer = L.geoJSON(data, {
-        style: {
-          color: '#00ffe1',
-          weight: 4,
-          fillColor: '#00ffe1',
-          fillOpacity: 0.05,
-          dashArray: '6 4',
-        }
-      }).addTo(map);
-      countPointsInIsochrone(isochroneLayer);
-    } catch (err) {
-      showError('⚠️ Failed to load isochrone.');
-      console.error(err);
-    } finally {
-      showLoading(false);
-    }
+  // Remove previous marker
+  if (clickMarker) map.removeLayer(clickMarker);
+
+  if (reportMode) {
+    // 📍 Create emoji-style marker with popup
+    clickMarker = L.marker([lat, lng], {
+      icon: L.divIcon({
+        className: 'emoji-marker',
+        html: '📍',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+      })
+    }).addTo(map).bindPopup("Missing service reported here 🛠️").openPopup();
+
+    map.flyTo([lat, lng], 16);
+
+    // Pre-filled Google Form link
+    const serviceType = encodeURIComponent("🟢 ATM Locations");
+    const comment = encodeURIComponent("Add comment here");
+    const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScnD65unZO9KgMvoBM046LQCSAIsHgSjg71WQB5Gc6Q8w6ArQ/viewform?usp=pp_url&entry.1368569100=${serviceType}&entry.1093015021=${lat}&entry.690671791=${lng}&entry.92242434=${comment}`;
+    
+    window.open(formUrl, '_blank');
+    return;
   }
+
+  // Regular marker + isochrone drawing
+  clickMarker = L.circleMarker([lat, lng], {
+    radius: 6,
+    color: '#00ffe1',
+    fillColor: '#00ffe1',
+    fillOpacity: 1,
+  }).addTo(map);
+  map.flyTo([lat, lng], 13);
+  createPulse(e.containerPoint);
+
+  // Remove old isochrone if exists
+  if (isochroneLayer) map.removeLayer(isochroneLayer);
+
+  const rangeType = document.querySelector('input[name="rangeType"]:checked').value;
+  const range = rangeType === 'time'
+    ? parseInt(document.getElementById('timeInput').value) * 60
+    : parseInt(document.getElementById('distanceInput').value);
+
+  const body = {
+    locations: [[lng, lat]],
+    range: [range],
+    range_type: rangeType,
+    attributes: ['area'],
+  };
+
+  showLoading(true);
+  try {
+    const res = await fetch(`https://api.openrouteservice.org/v2/isochrones/${selectedMode}`, {
+      method: 'POST',
+      headers: {
+        Authorization: apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    isochroneLayer = L.geoJSON(data, {
+      style: {
+        color: '#00ffe1',
+        weight: 4,
+        fillColor: '#00ffe1',
+        fillOpacity: 0.05,
+        dashArray: '6 4',
+      }
+    }).addTo(map);
+    countPointsInIsochrone(isochroneLayer);
+  } catch (err) {
+    showError('⚠️ Failed to load isochrone.');
+    console.error(err);
+  } finally {
+    showLoading(false);
+  }
+}
+
+
+document.getElementById('reportServiceBtn').addEventListener('click', () => {
+  reportMode = true;
+  alert('📍 Click on the map to report the missing service location.');
+
+  // Highlight report button (green), reset find button (blue)
+  document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
+  document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
+});
+
+document.getElementById('findServiceBtn').addEventListener('click', () => {
+  reportMode = false;
+
+  // Highlight find button (green), reset report button (blue)
+  document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
+  document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
+});
 
 
 function countPointsInIsochrone(isoLayer) {
