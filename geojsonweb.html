@@ -366,6 +366,68 @@
         width: 100vw;
       }
     }
+
+    #reportFormContainer {
+  position: absolute;
+  bottom: 30%;
+  right: 45%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #00ffe1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 270px;
+  line-height: 1.5;
+  z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#reportFormContainer h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+#reportFormContainer label {
+  display: block;
+  margin: 10px 0 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+#reportFormContainer select,
+#reportFormContainer input[type="text"],
+#reportFormContainer textarea {
+  width: 100%;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 225, 0.6);
+  background: rgba(0, 0, 0, 0.15);
+  color: #00ffe1;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+#reportFormContainer select:focus,
+#reportFormContainer input[type="text"]:focus,
+#reportFormContainer textarea:focus {
+  border-color: #00ffe1;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+#reportFormContainer input[readonly] {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+    
+    
   </style>
   
 </head>
@@ -458,6 +520,55 @@
     </iframe>
   </div>
 
+
+<div id="reportFormContainer" class="report-form" style="display: none;">
+  <h3>🛠️ Report Missing Service</h3>
+
+  <form 
+    action="https://docs.google.com/forms/d/e/1FAIpQLScnD65unZO9KgMvoBM046LQCSAIsHgSjg71WQB5Gc6Q8w6ArQ/formResponse" 
+    method="POST" 
+    target="hidden_iframe" 
+    onsubmit="showPopup();"
+  >
+    <!-- Service Selection -->
+    <label for="serviceType">Select Missing Service</label>
+    <select id="serviceType" name="entry.1368569100" required>
+      <option value="">-- Choose Service --</option>
+      <option value="🟢 ATM Locations">🟢 ATM Locations</option>
+      <option value="🔵 Bank Locations">🔵 Bank Locations</option>
+      <option value="🟠 Cinemas">🟠 Cinemas</option>
+      <option value="🟡 Fuel Stations">🟡 Fuel Stations</option>
+      <option value="🔴 Hospitals">🔴 Hospitals</option>
+      <option value="🟣 Pharmacies">🟣 Pharmacies</option>
+      <option value="🌸 Police Stations">🌸 Police Stations</option>
+      <option value="⚪ Schools">⚪ Schools</option>
+    </select>
+
+    <!-- Latitude -->
+    <label for="latField">Latitude</label>
+    <input type="text" id="latField" name="entry.1093015021" readonly />
+
+    <!-- Longitude -->
+    <label for="lngField">Longitude</label>
+    <input type="text" id="lngField" name="entry.690671791" readonly />
+
+    <!-- Location Area -->
+<!-- Location Area -->
+<label for="areaName">Service Area</label>
+<input type="text" id="areaName" name="entry.258777224" placeholder="Kalmunai" required />
+
+
+    <!-- Comment Box -->
+    <label for="comment">Additional Comment</label>
+    <textarea id="comment" name="entry.92242434" placeholder="Add comment here"></textarea>
+
+    <!-- Submit Button -->
+    <button type="submit" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:10px; border:none; border-radius:10px; cursor:pointer; width: 100%;">✅ Submit</button>
+  </form>
+
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+</div>
+  
 <div id="map"></div>
 <div id="pulseContainer"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -515,40 +626,62 @@ document.getElementById('locateBtn').addEventListener('click', () => {
 document.querySelectorAll('.basemap-btns button').forEach(btn => {
   btn.addEventListener('click', () => {
     const selectedBase = btn.getAttribute('data-basemap');
+
     const legend = document.getElementById('legend');
     const serviceBox = document.getElementById('serviceCountBox');
-    const labels = document.querySelectorAll('.input-group label');
-    const labels2 = document.querySelectorAll('.switcher label');  // Select all labels inside input-group
+    const coordsBox = document.getElementById('coordsBox');
+    const reportForm = document.getElementById('reportFormContainer');
+
     const heading = document.querySelector('h1');
-    const h3 = document.querySelector('h3');
-    const coordsBox=document.getElementById('coordsBox');
-    const baseBTN=document.querySelector('basemap-btns');
-    if (selectedBase === 'osm' || selectedBase === 'googleStreets') {
-      legend.style.color = 'black';
-      serviceBox.style.color = 'black';
-      heading.style.color = 'black';
-      h3.style.color = 'black';
-      coordsBox.style.color='black';
-      labels.forEach(label => {
-        label.style.setProperty('color', 'black', 'important'); // Force override CSS
-      });
-      labels2.forEach(label => {
-        label.style.setProperty('color', 'black', 'important'); // Force override CSS
-      });
-      
-    } else {
-      legend.style.color = '#00ffe1'; // your preferred light color
-      serviceBox.style.color = '#00ffe1';
-      heading.style.color = '#00ffe1';
-      h3.style.color='#00ffe1';
-      coordsBox.style.color='#00ffe1';
-      labels.forEach(label => {
-        label.style.removeProperty('color'); // Remove inline style to fallback to CSS color (#00ffe1)
-      });
-      labels2.forEach(label => {
-        label.style.removeProperty('color'); // Remove inline style to fallback to CSS color (#00ffe1)
-      });
-      
+    const allH3 = document.querySelectorAll('h3');
+
+    const sidebarLabels = document.querySelectorAll('#sidebar label');
+    const formLabels = document.querySelectorAll('#reportFormContainer label');
+    const sidebarInputs = document.querySelectorAll('#sidebar input, #sidebar select, #sidebar textarea');
+    const reportInputs = reportForm.querySelectorAll('input, textarea, select');
+
+    const sidebarButtons = document.querySelectorAll('#sidebar button');
+
+    const isLight = selectedBase === 'osm' || selectedBase === 'googleStreets';
+
+    // Colors based on theme
+    const textColor = isLight ? 'black' : '#00ffe1';
+    const borderColor = isLight ? 'rgba(0,0,0,0.6)' : 'rgba(0, 255, 225, 0.6)';
+    const bgColor = isLight ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.15)';
+
+    // General text
+    if (legend) legend.style.color = textColor;
+    if (serviceBox) serviceBox.style.color = textColor;
+    if (coordsBox) coordsBox.style.color = textColor;
+    if (heading) heading.style.color = textColor;
+    allH3.forEach(h3 => h3.style.color = textColor);
+
+    // Labels
+    sidebarLabels.forEach(label => label.style.color = textColor);
+    formLabels.forEach(label => label.style.color = textColor);
+
+    // Form fields
+    sidebarInputs.forEach(el => {
+      el.style.color = textColor;
+      el.style.borderColor = borderColor;
+      el.style.background = bgColor;
+    });
+
+    reportInputs.forEach(el => {
+      el.style.color = textColor;
+      el.style.borderColor = borderColor;
+      el.style.background = bgColor;
+    });
+
+    // Buttons (optional: update text color if needed)
+    sidebarButtons.forEach(btn => {
+  btn.style.color = 'black'; // Always black text inside buttons
+});
+
+
+    // Report form container text color
+    if (reportForm) {
+      reportForm.style.color = textColor;
     }
   });
 });
@@ -816,13 +949,10 @@ async function handleMapClick(e) {
     map.flyTo([lat, lng], 16);
 
     // Pre-filled Google Form link
-    const serviceType = encodeURIComponent("🟢 ATM Locations");
-    const comment = encodeURIComponent("Add comment here");
-    const serviceArea = encodeURIComponent("Kalmunai");
-    const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScnD65unZO9KgMvoBM046LQCSAIsHgSjg71WQB5Gc6Q8w6ArQ/viewform?usp=pp_url&entry.1368569100=${serviceType}&entry.1093015021=${lat}&entry.690671791=${lng}&entry.92242434=${comment}&entry.258777224=${serviceArea}`;
-    
-    window.open(formUrl, '_blank');
-    return;
+    document.getElementById('latField').value = lat;
+   document.getElementById('lngField').value = lng;
+   document.getElementById('reportFormContainer').style.display = 'block';
+return;
   }
 
   // Regular marker + isochrone drawing
@@ -1112,6 +1242,13 @@ updateModeAndRangeDisplay();
       document.getElementById("sidebar2").classList.remove("open");
       document.getElementById("overlay2").classList.remove("active");
     }
+
+ function showPopup() {
+  alert("✅ Your report has been submitted!");
+  document.getElementById('reportFormContainer').style.display = 'none';
+  reportMode = false;
+}
+  
 </script>
 
 </body>
