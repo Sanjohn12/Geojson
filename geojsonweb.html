@@ -497,6 +497,8 @@
   <label><input type="checkbox" id="chkPharmacy" checked />  Pharmacies</label>
   <label><input type="checkbox" id="chkPolice" checked />  Police Stations</label>
   <label><input type="checkbox" id="chkSchool" checked />  Schools</label>
+  <label><input type="checkbox" id="chkPost" checked />  Post Offices</label>
+  <label><input type="checkbox" id="chkLibrary" checked />  Libraries</label>
 </div>
 
 <!-- Add this for error messages -->
@@ -517,6 +519,8 @@
   <div class="legend-item" data-layer="Pharmacy">🟣 Pharmacies</div>
   <div class="legend-item" data-layer="Police">🌸 Police Stations</div>
   <div class="legend-item" data-layer="School">⚪ Schools</div>
+  <div class="legend-item" data-layer="Post">🟤 Post Offices</div>
+  <div class="legend-item" data-layer="Library">🔘 Libraries</div>
 </div>
 
 <div id="serviceCountBox">
@@ -564,6 +568,8 @@
       <option value="🟣 Pharmacies">🟣 Pharmacies</option>
       <option value="🌸 Police Stations">🌸 Police Stations</option>
       <option value="⚪ Schools">⚪ Schools</option>
+      <option value="🟤 Post Offices">🟤 Post Offices</option>
+      <option value="🔘 Libraries">🔘 Libraries</option>
     </select>
 
     <!-- Latitude -->
@@ -806,7 +812,9 @@ const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&
   { name: 'Hospital', id: 'chkHospital', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/Hospital.geojson', color: '#e74c3c' },
   { name: 'Pharmacy', id: 'chkPharmacy', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/Pharmacy.geojson', color: '#9b59b6' },
   { name: 'Police', id: 'chkPolice', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/Police.geojson', color: '#FFB6C1' },
-  { name: 'School', id: 'chkSchool', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/School.geojson', color: '#ffffff' }
+  { name: 'School', id: 'chkSchool', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/School.geojson', color: '#ffffff' },
+  { name: 'Post Office', id: 'chkPost', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/Post.geojson', color: '#8B4513' }, 
+  { name: 'Library', id: 'chkLibrary', url: 'https://raw.githubusercontent.com/Sanjohn12/Geojson/main/GeoJson/Library.geojson', color: '#6E7B8B' }
 ];
 
   const overlayMaps = {};
@@ -1112,7 +1120,7 @@ function displayCounts(counts, areaKm2, perimeterKm) {
   for (let [service, count] of Object.entries(counts)) {
     const emoji = {
       ATM: "🟢", Bank: "🔵", Cinema: "🟠", Fuel: "🟡",
-      Hospital: "🔴", Pharmacy: "🟣", Police: "🌸", School: "⚪"
+      Hospital: "🔴", Pharmacy: "🟣", Police: "🌸", School: "⚪", Library: "🔘", Post: "🟤"
     }[service] || "🔹";
     container.innerHTML += `${emoji} ${service}: ${count}<br>`;
   }
