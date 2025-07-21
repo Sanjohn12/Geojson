@@ -447,7 +447,115 @@
   cursor: not-allowed;
   opacity: 0.8;
 }
-    
+
+.share-modal {
+  display: none ;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.share-modal.show {
+  display: flex;
+}
+
+/* Modal content box */
+.share-modal-content {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px 28px;
+  max-width: 500px;
+  max-height: 80vh;
+  width: 90%;
+  color: #00ffe1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Heading */
+.share-modal-content h3 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Preformatted text */
+#shareContent {
+  white-space: pre-wrap;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 12px;
+  border-radius: 10px;
+  color: #ffffffcc;
+  font-size: 10px;
+  line-height: 1.5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Buttons container */
+.share-modal-buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: nowrap; /* keep buttons in one row */
+}
+
+/* Make all buttons and links same width */
+.share-modal-buttons button,
+.share-modal-buttons a {
+  flex: 1;                /* equally share width */
+  min-width: 120px;       /* minimum width */
+  max-width: 150px;       /* optional max width */
+  background: linear-gradient(135deg, #00ffe1, #008cbe);
+  padding: 4px 4px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: normal;
+  text-align: center;
+  user-select: none;
+  color: #000;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  box-sizing: border-box; /* include padding in width */
+}
+
+/* Hover effect */
+.share-modal-buttons button:hover,
+.share-modal-buttons a:hover {
+  background: linear-gradient(135deg, #008cbe, #00ffe1);
+}
+
+/* Override specific button colors if needed */
+.btn-copy {
+  color: #000;
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25d366, #128c3b);
+  color: #fff;
+}
+
+.btn-close {
+  background: linear-gradient(135deg, #ff4b5c, #b22a35);
+  color: #fff;
+}
+
+#locateBtn:hover,
+#findServiceBtn:hover,
+#reportServiceBtn:hover,
+#resetBtn:hover,
+#shareBtn:hover,
+#openSidebarBtn:hover {
+  background: linear-gradient(135deg, #008cbe, #00ffe1) !important;
+}
     
   </style>
   
@@ -595,6 +703,21 @@
   </form>
 
   <iframe name="hidden_iframe" style="display:none;"></iframe>
+</div>
+
+<!-- Share Modal -->
+<div id="shareModal" class="share-modal">
+  <div class="share-modal-content">
+    <h3>📤 Share Results</h3>
+
+    <pre id="shareContent"></pre>
+
+    <div class="share-modal-buttons">
+      <button id="copyShareText" class="btn-copy">📋 Copy</button>
+      <a id="openWhatsAppLink" target="_blank" class="btn-whatsapp"> Open WhatsApp</a>
+      <button onclick="document.getElementById('shareModal').style.display='none'" class="btn-close">❌ Close</button>
+    </div>
+  </div>
 </div>
   
 <div id="map"></div>
@@ -1155,43 +1278,47 @@ function updateModeAndRangeDisplay() {
 }
 
 document.getElementById('shareBtn').addEventListener('click', () => {
-  const mode = document.getElementById('selectedModeDisplay').textContent.trim();
-  const range = document.getElementById('selectedRangeDisplay').textContent.trim();
-  const serviceSummary = document.getElementById('serviceCounts').innerText.trim();
+  const mode = document.getElementById('selectedModeDisplay')?.textContent.trim() || "Not Selected";
+  const range = document.getElementById('selectedRangeDisplay')?.textContent.trim() || "Not Selected";
+  const serviceSummary = document.getElementById('serviceCounts')?.innerText.trim() || "No service data";
 
-  let originText = "Origin Location: Not selected";
-  if (clickMarker) {
+  let originText = "📍 Origin Location: Not selected";
+  if (window.clickMarker) {
     const lat = clickMarker.getLatLng().lat.toFixed(5);
     const lng = clickMarker.getLatLng().lng.toFixed(5);
-    originText = `Origin Location: 📌 Lat: ${lat} | Lng: ${lng}`;
+    originText = `📍 Origin Location:\nLat: ${lat} | Lng: ${lng}`;
   }
 
-  const shareText = `${originText}\nMode: ${mode}\nRange: ${range}\n📊 Services in Area:\n${serviceSummary}`;
+  const shareText = `${originText}\n🚶 Mode: ${mode}\n⏱️ Range: ${range}\n📊 Services in Area:\n${serviceSummary}`;
 
-  const errorBox = document.getElementById('errorBox');
+  // Update the modal content and show it
+  const modal = document.getElementById('shareModal');
+  document.getElementById('shareContent').textContent = shareText;
+  document.getElementById('openWhatsAppLink').href = "https://wa.me/?text=" + encodeURIComponent(shareText);
+  modal.style.display = 'flex'; // Show modal with flex layout
 
-  // Open WhatsApp immediately
-  const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(shareText);
-  window.open(whatsappUrl, '_blank');
-
-  // Copy to clipboard and show message in errorBox instead of alert
-  navigator.clipboard.writeText(shareText)
-    .then(() => {
-      errorBox.style.color = "#00ffcc";   // nice green/teal for success
-      errorBox.textContent = "📋 Results copied to clipboard! You can paste them anywhere.";
-      
-      // Clear message after 5 seconds
-      setTimeout(() => { errorBox.textContent = ""; }, 10000);
-    })
-    .catch(err => {
-      errorBox.style.color = "#ff5555";  // red for error
-      errorBox.textContent = "❌ Failed to copy results. Please try manually.";
-      
-      setTimeout(() => { errorBox.textContent = ""; }, 5000);
-      console.error("Copy failed", err);
+  // Copy button event
+  document.getElementById('copyShareText').onclick = () => {
+    navigator.clipboard.writeText(shareText).then(() => {
+      showFeedback("📋 Copied to clipboard!");
+    }).catch(err => {
+      showFeedback("❌ Copy failed.");
+      console.error("Copy failed:", err);
     });
-});
+  };
 
+  function showFeedback(msg) {
+    const errorBox = document.getElementById('errorBox');
+    if (errorBox) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      errorBox.style.color = "#00ffe1";
+      setTimeout(() => { errorBox.style.display = 'none'; }, 5000);
+    } else {
+      alert(msg);
+    }
+  }
+});
   
 function updateLegend() {
   layersInfo.forEach(({name, id}) => {
