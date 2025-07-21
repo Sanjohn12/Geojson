@@ -479,7 +479,7 @@
 </div>
 
 <!-- Add this for error messages -->
-<div id="errorBox" style="color: #ff5555; font-weight: bold; min-height: 1.5em; margin-top: 8px;"></div>
+<div id="errorBox" style="color: #ff5555; font-weight: bold; min-height: 1em; margin-top: 3px; font-size: small;"></div>
 <button id="locateBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:8px; border:none; border-radius:8px; cursor:pointer;">📍 Show My Location</button>
 <button id="findServiceBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:5px; border:none; border-radius:8px; cursor:pointer;">🚗 Find Nearby Services</button>
 <button id="reportServiceBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:5px; border:none; border-radius:8px; cursor:pointer;">📝 Report Missing Service</button>
@@ -784,6 +784,8 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   document.getElementById('selectedModeDisplay').textContent = '🚗 Driving';  // default mode text
   document.getElementById('selectedRangeDisplay').textContent = '15 minutes'; // default range text
   document.getElementById('serviceCounts').innerHTML = '';  
+  document.getElementById('reportFormContainer').style.display = 'none';
+
 });
 const loadedGeoJsonLayers = {};  // <-- This will store all geojson layers by name
 
