@@ -940,7 +940,7 @@ async function handleMapClick(e) {
     clickMarker = L.marker([lat, lng], {
       icon: L.divIcon({
         className: 'emoji-marker',
-        html: '📍',
+        html: '📌',
         iconSize: [24, 24],
         iconAnchor: [12, 12],
       })
@@ -956,12 +956,14 @@ return;
   }
 
   // Regular marker + isochrone drawing
-  clickMarker = L.circleMarker([lat, lng], {
-    radius: 6,
-    color: '#00ffe1',
-    fillColor: '#00ffe1',
-    fillOpacity: 1,
-  }).addTo(map);
+  clickMarker = L.marker([lat, lng], {
+  icon: L.divIcon({
+    className: 'emoji-marker',
+    html: '📍',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  })
+}).addTo(map).bindPopup("Service search location 📍").openPopup();
   map.flyTo([lat, lng], 13);
   createPulse(e.containerPoint);
 
