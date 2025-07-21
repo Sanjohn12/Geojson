@@ -550,6 +550,9 @@
     onsubmit="showPopup();"
   >
     <!-- Service Selection -->
+    <label for="userName">Reporter Name</label>
+    <input type="text" id="userName" name="entry.903743841" placeholder="Vijay" required />
+    
     <label for="serviceType">Select Missing Service</label>
     <select id="serviceType" name="entry.1368569100" required>
       <option value="">-- Choose Service --</option>
@@ -579,7 +582,7 @@
 
     <!-- Comment Box -->
     <label for="comment">Additional Comment</label>
-    <textarea id="comment" name="entry.92242434" placeholder="Add comment here"></textarea>
+    <textarea id="comment" name="entry.92242434" placeholder="This Location Nedd This Service or This Location Have This Service Please Update"></textarea>
 
     <!-- Submit Button -->
     <button type="submit" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:10px; border:none; border-radius:10px; cursor:pointer; width: 100%;">✅ Submit</button>
@@ -1300,6 +1303,7 @@ function loadFeedbackCards() {
           <h4>📍 ${row['Location Area Name'] || 'Unknown Area'}</h4>
           <p><strong>🛠️ Service:</strong> ${row['Select a Service Type You Want to add'] || 'Not specified'}</p>
           <p><strong>📍 Coordinates:</strong> ${row.Latitude || 'N/A'}, ${row.Longitude || 'N/A'}</p>
+          <p><strong>📝 Reporter Name:</strong> ${row['Reporter Name'] || 'Anonymous'}</p>
           <p>💬 ${row['Any comment for improvement or about you added location of that service'] || 'No comment'}</p>
           <small>🕒 ${row.Timestamp}</small>
         `;
