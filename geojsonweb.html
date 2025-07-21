@@ -649,7 +649,6 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     const isLight = selectedBase === 'osm' || selectedBase === 'googleStreets';
 
     const textColor = isLight ? 'black' : '#00ffe1';
-    const borderColor = isLight ? 'rgba(0,0,0,0.6)' : 'rgba(0, 255, 225, 0.6)';
     const bgColor = isLight ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.15)';
 
     const legend = document.getElementById('legend');
@@ -684,7 +683,6 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     // Inputs background and text color
     [...sidebarInputs, ...reportInputs].forEach(el => {
       el.style.color = textColor;
-      el.style.borderColor = borderColor;
       el.style.background = bgColor;
     });
 
@@ -696,13 +694,11 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     // Feedback sidebar container styling
     if (sidebar2) {
       sidebar2.style.color = textColor;
-      sidebar2.style.borderColor = borderColor;
       sidebar2.style.background = bgColor;
     }
 
     if (sidebarHeader2) {
       sidebarHeader2.style.color = textColor;
-      sidebarHeader2.style.borderBottom = `1px solid ${borderColor}`;
     }
 
     if (feedbackCards) {
