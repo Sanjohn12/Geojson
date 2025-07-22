@@ -1461,17 +1461,29 @@ function loadFeedbackCards() {
         container.appendChild(card);
 
         // Hover handlers to show/hide marker
-        card.addEventListener('mouseenter', () => {
+       card.addEventListener('mouseenter', () => {
   map.flyTo([lat, lng], 12, { duration: 0.7 });
+
+  // Create popup content
+  const popupContent = `
+    <strong>📍 ${row['Location Area Name'] || 'Unknown Area'}</strong><br>
+    🛠️ <strong>Service:</strong> ${row['Select a Service Type You Want to add'] || 'Not specified'}<br>
+    👤 <strong>Reporter:</strong> ${row['Reporter Name'] || 'Anonymous'}<br>
+    💬 ${row['Any comment for improvement or about you added location of that service'] || 'No comment'}
+  `;
 
   hoverMarker = L.marker([lat, lng], {
     icon: L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-      iconSize: [32, 32],        // Adjust as needed
-      iconAnchor: [16, 32],      // Center bottom of the icon
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],        // Point of icon that's at the marker's lat/lng
+      popupAnchor: [0, -35]        // Shift popup upwards (negative Y = above marker)
     })
   }).addTo(map);
+
+  hoverMarker.bindPopup(popupContent).openPopup();
 });
+
 
       
 
