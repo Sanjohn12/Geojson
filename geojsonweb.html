@@ -744,7 +744,7 @@ document.getElementById('locateBtn').addEventListener('click', () => {
       const lng = position.coords.longitude;
 
       // Fly to user location
-      map.flyTo([lat, lng], 15);
+      map.flyTo([lat, lng], 13);
 
       // Add or update marker
       if (userLocationMarker) {
@@ -1121,7 +1121,7 @@ async function handleMapClick(e) {
       })
     }).addTo(map).bindPopup("Missing service reported here 🛠️").openPopup();
 
-    map.flyTo([lat, lng], 16);
+    map.flyTo([lat, lng], 13);
 
     // Pre-filled Google Form link
     document.getElementById('latField').value = lat;
@@ -1394,7 +1394,7 @@ document.getElementById('distanceInput').addEventListener('input', updateModeAnd
         const lng = position.coords.longitude;
 
         // Set map view to user's location
-        map.setView([lat, lng], 14);
+        map.setView([lat, lng], 13);
 
         // Optional: Show marker on user's location
         L.circleMarker([lat, lng], {
