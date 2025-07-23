@@ -140,7 +140,6 @@
       }
     }
 
-    /* Smoke canvas on top, but pointer-events none so it doesn't block */
     canvas#smoke-canvas {
       position: absolute;
       top: 0; left: 0;
@@ -164,10 +163,8 @@
 </head>
 <body>
 
-  <!-- Spline 3D background -->
   <iframe class="background-3d" src="https://my.spline.design/robotfollowcursorforlandingpage-5r6cxpMbndWVksaJBveSyhAL/" frameborder="0" allowfullscreen></iframe>
 
-  <!-- Content (rotating box + button) -->
   <div class="content">
     <div class="flip-box" id="flipBox">
       <div class="flip-face front" id="frontFace">Welcome to the City Planner</div>
@@ -176,11 +173,11 @@
     
   </div>
 <button class="water-button" id="waterBtn" onclick="openLocalPage()">Explore Now</button>
-  <!-- Smoke particle canvas -->
+
   <canvas id="smoke-canvas"></canvas>
  <div class="hidden"></div>
   <script>
-    // Rotating text code
+
     function openLocalPage() {
       window.location.href = "geojsonweb.html";
     }
@@ -217,7 +214,7 @@
       }
     }, 1700);
 
-    // Smoke particle effect only on button hover
+    
     const canvas = document.getElementById("smoke-canvas");
     const ctx = canvas.getContext("2d");
     let width = window.innerWidth;
@@ -228,13 +225,13 @@
     const particles = [];
 
     const colors = [
-      '255, 0, 0',      // bright red
-      '255, 165, 0',    // orange
-      '255, 255, 0',    // yellow
-      '0, 255, 0',      // bright green
-      '0, 255, 255',    // cyan
-      '0, 0, 255',      // blue
-      '255, 0, 255',    // magenta
+      '255, 0, 0',      
+      '255, 165, 0',    
+      '255, 255, 0',    
+      '0, 255, 0',      
+      '0, 255, 255',    
+      '0, 0, 255',      
+      '255, 0, 255',    
     ];
 
     class Particle {
@@ -280,7 +277,7 @@
 
     animate();
 
-    // Only add particle effect on button hover (mousemove over button)
+ 
     const button = document.getElementById('waterBtn');
 
     button.addEventListener('mousemove', (e) => {
@@ -289,7 +286,7 @@
       }
     });
 
-    // Resize canvas on window resize
+
     window.addEventListener("resize", () => {
       width = window.innerWidth;
       height = window.innerHeight;
