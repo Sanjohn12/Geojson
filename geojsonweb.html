@@ -30,15 +30,15 @@
     }
 
      #sidebar {
-  position: fixed;      /* better for sidebar, stays in place when scrolling */
-  top: 10px;              /* stick to very top */
-  left: 10px;             /* stick to left edge */
-  height: auto;       /* full viewport height */
-  width: 350px;        /* your desired width */
-  max-width: 95vw;     /* still keep max width for smaller screens */
+  position: fixed;      
+  top: 10px;              
+  left: 10px;             
+  height: auto;       
+  width: 350px;        
+  max-width: 95vw;     
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border-radius: 20px 20px 20px 20px;  /* round all corners */
+  border-radius: 20px 20px 20px 20px;  
   padding: 20px 20px;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -346,14 +346,14 @@
   transform: scale(1.2);
 }
 
-/* Feedback cards styling */
+
 #feedbackCards {
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding: 10px 0;
   overflow-y: auto;
-  height: 100%; /* ensure it fills sidebar content area */
+  height: 100%; 
 }
 
 .card {
@@ -463,7 +463,7 @@
   display: flex;
 }
 
-/* Modal content box */
+
 .share-modal-content {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -477,14 +477,14 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Heading */
+
 .share-modal-content h3 {
   margin-top: 0;
   font-size: 20px;
   font-weight: bold;
 }
 
-/* Preformatted text */
+
 #shareContent {
   white-space: pre-wrap;
   background: rgba(255, 255, 255, 0.07);
@@ -498,21 +498,21 @@
   overflow-y: auto;
 }
 
-/* Buttons container */
+
 .share-modal-buttons {
   margin-top: 10px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  flex-wrap: nowrap; /* keep buttons in one row */
+  flex-wrap: nowrap; 
 }
 
-/* Make all buttons and links same width */
+
 .share-modal-buttons button,
 .share-modal-buttons a {
-  flex: 1;                /* equally share width */
-  min-width: 120px;       /* minimum width */
-  max-width: 150px;       /* optional max width */
+  flex: 1;               
+  min-width: 120px;      
+  max-width: 150px;       
   background: linear-gradient(135deg, #00ffe1, #008cbe);
   padding: 4px 4px;
   border: none;
@@ -525,16 +525,16 @@
   color: #000;
   text-decoration: none;
   transition: background 0.3s ease;
-  box-sizing: border-box; /* include padding in width */
+  box-sizing: border-box; 
 }
 
-/* Hover effect */
+
 .share-modal-buttons button:hover,
 .share-modal-buttons a:hover {
   background: linear-gradient(135deg, #008cbe, #00ffe1);
 }
 
-/* Override specific button colors if needed */
+
 .btn-copy {
   color: #000;
 }
@@ -616,7 +616,7 @@
   <label><input type="checkbox" id="chkLibrary" checked />  Libraries</label>
 </div>
 
-<!-- Add this for error messages -->
+
 <div id="errorBox" style="color: #ff5555; font-weight: bold; min-height: 1em; margin-top: 3px; font-size: small;"></div>
 <button id="locateBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:8px; border:none; border-radius:8px; cursor:pointer;">📍 Show My Location</button>
 <button id="findServiceBtn" style="margin-top: 10px; background: linear-gradient(135deg, #00ffe1, #008cbe); padding:5px; border:none; border-radius:8px; cursor:pointer;">🚗 Find Nearby Services</button>
@@ -668,7 +668,7 @@
     target="hidden_iframe" 
     onsubmit="showPopup();"
   >
-    <!-- Service Selection -->
+    
     <label for="userName">Reporter Name</label>
     <input type="text" id="userName" name="entry.903743841" placeholder="Vijay" required />
     
@@ -687,32 +687,31 @@
       <option value="🔘 Libraries">🔘 Libraries</option>
     </select>
 
-    <!-- Latitude -->
+    
     <label for="latField">Latitude</label>
     <input type="text" id="latField" name="entry.1093015021" readonly />
 
-    <!-- Longitude -->
+    
     <label for="lngField">Longitude</label>
     <input type="text" id="lngField" name="entry.690671791" readonly />
 
-    <!-- Location Area -->
-<!-- Location Area -->
+   
 <label for="areaName">Service Area</label>
 <input type="text" id="areaName" name="entry.258777224" placeholder="Kalmunai" required />
 
 
-    <!-- Comment Box -->
+   
     <label for="comment">Additional Comment</label>
     <textarea id="comment" name="entry.92242434" placeholder="This Location Nedd This Service or This Location Have This Service Please Update"></textarea>
 
-    <!-- Submit Button -->
+    
     <button type="submit" style="margin-top: 15px; background: linear-gradient(135deg, #00ffe1, #008cbe); color:#000000; padding:10px; border:none; border-radius:10px; cursor:pointer; width: 100%;">✅ Submit</button>
   </form>
 
   <iframe name="hidden_iframe" style="display:none;"></iframe>
 </div>
 
-<!-- Share Modal -->
+
 <div id="shareModal" class="share-modal">
   <div class="share-modal-content">
     <h3>📤 Share Results</h3>
@@ -737,7 +736,7 @@ document.getElementById('locateBtn').addEventListener('click', () => {
   const errorBox = document.getElementById('errorBox');
 
   if (!navigator.geolocation) {
-    errorBox.style.color = "#ff5555"; // red for error
+    errorBox.style.color = "#ff5555"; 
     errorBox.textContent = 'Geolocation is not supported by your browser.';
     setTimeout(() => { errorBox.textContent = ''; }, 4000);
     return;
@@ -749,10 +748,10 @@ document.getElementById('locateBtn').addEventListener('click', () => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      // Fly to user location
+      
       map.flyTo([lat, lng], 13);
 
-      // Add or update marker
+     
       if (userLocationMarker) {
         userLocationMarker.setLatLng([lat, lng]);
       } else {
@@ -768,14 +767,14 @@ document.getElementById('locateBtn').addEventListener('click', () => {
 
       userLocationMarker.bindPopup('You are here!').openPopup();
 
-      // Show success message in errorBox with green/teal color
-      errorBox.style.color = "#00FF00"; // success color
+      
+      errorBox.style.color = "#00FF00"; 
       errorBox.textContent = "📍 Location found!";
       setTimeout(() => { errorBox.textContent = ''; }, 4000);
     },
     (err) => {
       showLoading(false);
-      errorBox.style.color = "#ff5555"; // error color
+      errorBox.style.color = "#ff5555"; 
       errorBox.textContent = 'Unable to retrieve your location: ' + err.message;
       setTimeout(() => { errorBox.textContent = ''; }, 4000);
     }
@@ -803,34 +802,34 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     const reportInputs = reportForm ? reportForm.querySelectorAll('input, textarea, select') : [];
     const sidebarButtons = document.querySelectorAll('#sidebar button');
 
-    // Elements for feedback sidebar
+   
     const sidebar2 = document.getElementById('sidebar2');
     const sidebarHeader2 = document.getElementById('sidebarHeader2');
     const feedbackCards = document.getElementById('feedbackCards');
 
-    // General colors
+    
     if (legend) legend.style.color = textColor;
     if (serviceBox) serviceBox.style.color = textColor;
     if (coordsBox) coordsBox.style.color = textColor;
     if (heading) heading.style.color = textColor;
     allH3.forEach(h3 => h3.style.color = textColor);
 
-    // Labels color
+    
     sidebarLabels.forEach(label => label.style.color = textColor);
     formLabels.forEach(label => label.style.color = textColor);
 
-    // Inputs background and text color
+    
     [...sidebarInputs, ...reportInputs].forEach(el => {
       el.style.color = textColor;
       el.style.background = bgColor;
     });
 
-    // Sidebar buttons color (you can adjust if you want)
+    
     sidebarButtons.forEach(b => {
-      b.style.color = 'black'; // fixed black text inside buttons
+      b.style.color = 'black'; 
     });
 
-    // Feedback sidebar container styling
+    
     if (sidebar2) {
       sidebar2.style.color = textColor;
       sidebar2.style.background = bgColor;
@@ -843,20 +842,20 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     if (feedbackCards) {
       feedbackCards.style.color = textColor;
 
-      // Style all feedback cards inside
+      
       const cards = feedbackCards.querySelectorAll('.card');
       cards.forEach(card => {
         card.style.background = bgColor;
         card.style.color = textColor;
 
-        // Style the inner text elements in cards
+        
         card.querySelectorAll('h4, p, small').forEach(el => {
           el.style.color = textColor;
         });
       });
     }
 
-    // Report form container text color
+    
     if (reportForm) {
       reportForm.style.color = textColor;
     }
@@ -888,7 +887,6 @@ function showLoading(show) {
 
 
 
-  // Base Maps
   const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CARTO &copy; OpenStreetMap contributors',
     maxZoom: 19,
@@ -909,7 +907,7 @@ const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&
   
 });
   
-  // Map Initialization
+  
   const map = L.map('map', {
     center: [7.9271, 79.8912],
     zoom: 9,
@@ -917,7 +915,7 @@ const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&
     zoomControl: false,
   });
 
-  // --- Load GeoJSON layers from GitHub ---
+  
   function createGeoJsonLayer(url, name, style, popupProp) {
     return fetch(url)
       .then(res => res.json())
@@ -955,22 +953,21 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   if (clickMarker) map.removeLayer(clickMarker);
   if (userLocationMarker) {
     map.removeLayer(userLocationMarker);
-    userLocationMarker = null; // clear user location marker
+    userLocationMarker = null; 
   }
   document.getElementById('coordsBox').innerText = '📍 Click a location';
   document.getElementById('searchBar').value = '';
-    // Reset serviceCountBox content:
-  document.getElementById('selectedModeDisplay').textContent = '🚗 Driving';  // default mode text
-  document.getElementById('selectedRangeDisplay').textContent = '15 minutes'; // default range text
+  document.getElementById('selectedModeDisplay').textContent = '🚗 Driving';  
+  document.getElementById('selectedRangeDisplay').textContent = '15 minutes'; 
   document.getElementById('serviceCounts').innerHTML = '';  
   document.getElementById('reportFormContainer').style.display = 'none';
 
 });
-const loadedGeoJsonLayers = {};  // <-- This will store all geojson layers by name
+const loadedGeoJsonLayers = {};  
 
 
 
-// This function loads a layer when called
+
 async function loadLayer(info) {
   const layer = await createGeoJsonLayer(info.url, info.name, {
     radius: 6,
@@ -985,12 +982,12 @@ async function loadLayer(info) {
   overlayMaps[`🏷️ ${info.name}`] = layer;
 }
 
-// This sets up the lazy toggle for each checkbox
+
 function lazyLoadAndToggleLayer(info) {
   const checkbox = document.getElementById(info.id);
   if (!checkbox) return;
 
-  // Load immediately if checkbox is checked at load time
+ 
   if (checkbox.checked) {
     loadLayer(info);
   }
@@ -998,9 +995,9 @@ function lazyLoadAndToggleLayer(info) {
   checkbox.addEventListener('change', async () => {
     if (checkbox.checked) {
       if (!loadedGeoJsonLayers[info.name]) {
-        await loadLayer(info); // Load and show
+        await loadLayer(info); 
       } else {
-        map.addLayer(loadedGeoJsonLayers[info.name]); // Just show
+        map.addLayer(loadedGeoJsonLayers[info.name]); 
       }
     } else {
       const layer = loadedGeoJsonLayers[info.name];
@@ -1009,20 +1006,20 @@ function lazyLoadAndToggleLayer(info) {
   });
 }
 
-// Loop through all layer info to set up toggle logic
+
 layersInfo.forEach(info => {
   lazyLoadAndToggleLayer(info);
 });
 
 
 
-  // --- Basemap switch buttons ---
+ 
 let currentBase = cartoDark;
 const basemapLayers = {
-  cartoDark,             // key
-  esriWorldImagery,      // key
-  osm,                   // key
-  googleStreets          // key
+  cartoDark,            
+  esriWorldImagery,      
+  osm,                  
+  googleStreets         
 };
 
 document.querySelectorAll('.basemap-btns button').forEach(btn => {
@@ -1035,11 +1032,11 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
 
     const selected = btn.dataset.basemap;
 
-    // ✅ Get the basemap layer from the lookup object
+    
     currentBase = basemapLayers[selected] || cartoDark;
     currentBase.addTo(map);
 
-    // 🧠 Re-add only visible geojson layers
+   
     Object.values(loadedGeoJsonLayers).forEach(layer => {
       if (map.hasLayer(layer)) {
         map.removeLayer(layer);
@@ -1051,7 +1048,7 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
 
 
 
-  // --- Mode buttons ---
+ 
   let selectedMode = 'driving-car';
   document.querySelectorAll('.mode-btns button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1061,7 +1058,7 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     });
   });
 
-  // --- Range type toggle ---
+  
   document.getElementsByName('rangeType').forEach(input => {
     input.addEventListener('change', () => {
       const type = document.querySelector('input[name="rangeType"]:checked').value;
@@ -1070,8 +1067,8 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     });
   });
 
-  // --- Search ---
-  const apiKey = '5b3ce3597851110001cf624857441354c4b14c1994cb59adac44ffc4'; // Your OpenRouteService API key
+  
+  const apiKey = '5b3ce3597851110001cf624857441354c4b14c1994cb59adac44ffc4'; 
 
   document.getElementById('searchBar').addEventListener('keypress', async e => {
     if (e.key === 'Enter') {
@@ -1093,7 +1090,7 @@ document.querySelectorAll('.basemap-btns button').forEach(btn => {
     }
   });
 
-  // --- Isochrone ---
+ 
  let isochroneLayer, clickMarker;
 let reportMode = false;
 
@@ -1113,11 +1110,11 @@ async function handleMapClick(e) {
   const lng = e.latlng.lng.toFixed(5);
   document.getElementById('coordsBox').innerText = `📌 Lat: ${lat} | Lng: ${lng}`;
 
-  // Remove previous marker
+  
   if (clickMarker) map.removeLayer(clickMarker);
 
   if (reportMode) {
-    // 📍 Create emoji-style marker with popup
+    
     clickMarker = L.marker([lat, lng], {
       icon: L.divIcon({
         className: 'emoji-marker',
@@ -1129,14 +1126,14 @@ async function handleMapClick(e) {
 
     map.flyTo([lat, lng], 13);
 
-    // Pre-filled Google Form link
+    
     document.getElementById('latField').value = lat;
    document.getElementById('lngField').value = lng;
    document.getElementById('reportFormContainer').style.display = 'block';
 return;
   }
 
-  // Regular marker + isochrone drawing
+  
   clickMarker = L.marker([lat, lng], {
   icon: L.divIcon({
     className: 'emoji-marker',
@@ -1148,7 +1145,7 @@ return;
   map.flyTo([lat, lng], 13);
   createPulse(e.containerPoint);
 
-  // Remove old isochrone if exists
+  
   if (isochroneLayer) map.removeLayer(isochroneLayer);
 
   const rangeType = document.querySelector('input[name="rangeType"]:checked').value;
@@ -1198,7 +1195,6 @@ document.getElementById('reportServiceBtn').addEventListener('click', () => {
   alert('📍 Click on the map to report the missing service location.');
   document.getElementById('errorBox').style.color = '#D32F2F';
   document.getElementById('errorBox').innerHTML = '📝 Click on the map to report a missing service (ATM, bus stop, etc). A form will open with the location auto-filled.';
-  // Highlight report button (green), reset find button (blue)
   document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
   document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
 });
@@ -1206,7 +1202,6 @@ document.getElementById('reportServiceBtn').addEventListener('click', () => {
 document.getElementById('findServiceBtn').addEventListener('click', () => {
   reportMode = false;
   alert('📍 Click on the map to Find Service Locations');
-  // Highlight find button (green), reset report button (blue)
   document.getElementById('findServiceBtn').style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
   document.getElementById('reportServiceBtn').style.background = 'linear-gradient(135deg, #00bcd4, #008cbe)';
 });
@@ -1232,21 +1227,17 @@ function countPointsInIsochrone(isoLayer) {
     counts[name] = count;
   });
 
-  // Calculate area in km²
+  
   const areaSqMeters = turf.area(isoFeature);
   const areaKm2 = (areaSqMeters / 1_000_000).toFixed(2);
-
-  // Calculate perimeter in km
   const perimeterKm = turf.length(turf.polygonToLine(isoFeature), { units: 'kilometers' }).toFixed(2);
-
   displayCounts(counts, areaKm2, perimeterKm);
 }
 
 function displayCounts(counts, areaKm2, perimeterKm) {
   const container = document.getElementById("serviceCounts");
-  container.innerHTML = ""; // Clear previous
+  container.innerHTML = ""; 
 
-  // Display counts per service
   for (let [service, count] of Object.entries(counts)) {
     const emoji = {
       ATM: "🟢", Bank: "🔵", Cinema: "🟠", Fuel: "🟡",
@@ -1255,7 +1246,6 @@ function displayCounts(counts, areaKm2, perimeterKm) {
     container.innerHTML += `${emoji} ${service}: ${count}<br>`;
   }
 
-  // Display area and perimeter info
   container.innerHTML += `<hr>`;
   container.innerHTML += `<b>Isochrone Area:</b> ${areaKm2} km²<br>`;
   container.innerHTML += `<b>Isochrone Perimeter:</b> ${perimeterKm} km<br>`;
@@ -1263,7 +1253,6 @@ function displayCounts(counts, areaKm2, perimeterKm) {
 
 
 function updateModeAndRangeDisplay() {
-  // Show Mode with emoji and label
   const modeLabels = {
     'driving-car': '🚗 Driving',
     'cycling-regular': '🚴 Cycling',
@@ -1271,7 +1260,6 @@ function updateModeAndRangeDisplay() {
   };
   document.getElementById('selectedModeDisplay').textContent = modeLabels[selectedMode] || selectedMode;
 
-  // Show Range with units
   const rangeType = document.querySelector('input[name="rangeType"]:checked').value;
   let rangeText = '';
   if (rangeType === 'time') {
@@ -1297,14 +1285,11 @@ document.getElementById('shareBtn').addEventListener('click', () => {
   }
 
   const shareText = `${originText}\n🚶 Mode: ${mode}\n⏱️ Range: ${range}\n📊 Services in Area:\n${serviceSummary}`;
-
-  // Update the modal content and show it
   const modal = document.getElementById('shareModal');
   document.getElementById('shareContent').textContent = shareText;
   document.getElementById('openWhatsAppLink').href = "https://wa.me/?text=" + encodeURIComponent(shareText);
-  modal.style.display = 'flex'; // Show modal with flex layout
+  modal.style.display = 'flex'; 
 
-  // Copy button event
   document.getElementById('copyShareText').onclick = () => {
     navigator.clipboard.writeText(shareText).then(() => {
       showFeedback("📋 Copied to clipboard!");
@@ -1343,15 +1328,12 @@ layersInfo.forEach(({id}) => {
     checkbox.addEventListener('change', updateLegend);
   }
 });
-
-// Also call it once after initial load to sync legend with default visible layers
 updateLegend();
 
 
-// Update display on mode change
+
 document.querySelectorAll('.mode-btns button').forEach(btn => {
   btn.addEventListener('click', () => {
-    // Existing code to update mode selection
     document.querySelectorAll('.mode-btns button').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     selectedMode = btn.dataset.mode;
@@ -1360,7 +1342,6 @@ document.querySelectorAll('.mode-btns button').forEach(btn => {
   });
 });
 
-// Update display on range type change
 document.getElementsByName('rangeType').forEach(input => {
   input.addEventListener('change', () => {
     const type = document.querySelector('input[name="rangeType"]:checked').value;
@@ -1371,10 +1352,9 @@ document.getElementsByName('rangeType').forEach(input => {
   });
 });
 
-// Update display on time input change
+
 document.getElementById('timeInput').addEventListener('input', updateModeAndRangeDisplay);
 
-// Update display on distance input change
 document.getElementById('distanceInput').addEventListener('input', updateModeAndRangeDisplay);
 
 
@@ -1391,7 +1371,7 @@ document.getElementById('distanceInput').addEventListener('input', updateModeAnd
       }, 1500);
     }
 
-  // --- Geolocation on load ---
+ 
     window.addEventListener('load', () => {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -1399,10 +1379,8 @@ document.getElementById('distanceInput').addEventListener('input', updateModeAnd
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        // Set map view to user's location
         map.setView([lat, lng], 13);
 
-        // Optional: Show marker on user's location
         L.circleMarker([lat, lng], {
           radius: 6,
           color: '#00ffe1',
@@ -1421,7 +1399,6 @@ document.getElementById('distanceInput').addEventListener('input', updateModeAnd
 });
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT5Y3GXyanZrjIUDhra31v8WynS_deRs5V5Kf9WaPIArguuA6TwL2chYApjYb8FNSigb1Jo2-JaV1G8/pub?output=csv';
 
-// Function to fetch and display feedback cards inside sidebar
 let feedbackMarkers = [];
 
 function loadFeedbackCards() {
@@ -1440,14 +1417,14 @@ function loadFeedbackCards() {
         return;
       }
 
-      let hoverMarker = null; // Store temporary marker
+      let hoverMarker = null; 
 
       data.forEach(row => {
         const lat = parseFloat(row.Latitude);
         const lng = parseFloat(row.Longitude);
         if (isNaN(lat) || isNaN(lng)) return;
 
-        // Create card
+       
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -1460,11 +1437,11 @@ function loadFeedbackCards() {
         `;
         container.appendChild(card);
 
-        // Hover handlers to show/hide marker
+    
        card.addEventListener('mouseenter', () => {
   map.flyTo([lat, lng], 12, { duration: 0.7 });
 
-  // Create popup content
+  
   const popupContent = `
     <strong>📍 ${row['Location Area Name'] || 'Unknown Area'}</strong><br>
     🛠️ <strong>Service:</strong> ${row['Select a Service Type You Want to add'] || 'Not specified'}<br>
@@ -1476,8 +1453,8 @@ function loadFeedbackCards() {
     icon: L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
       iconSize: [32, 32],
-      iconAnchor: [16, 32],        // Point of icon that's at the marker's lat/lng
-      popupAnchor: [0, -35]        // Shift popup upwards (negative Y = above marker)
+      iconAnchor: [16, 32],        
+      popupAnchor: [0, -35]        
     })
   }).addTo(map);
 
@@ -1505,19 +1482,19 @@ function loadFeedbackCards() {
 
 
 
-// Open sidebar & load cards on button click
+
 function openSidebar() {
   document.getElementById("sidebar2").classList.add("open");
   document.getElementById("overlay2").classList.add("active");
-  loadFeedbackCards(); // Load feedback when sidebar opens
+  loadFeedbackCards(); 
 }
 
-// Close sidebar & remove markers from map
+
 function closeSidebar() {
   document.getElementById("sidebar2").classList.remove("open");
   document.getElementById("overlay2").classList.remove("active");
 
-  // Remove all feedback markers from map
+ 
   feedbackMarkers.forEach(marker => map.removeLayer(marker));
   feedbackMarkers = [];
 }
