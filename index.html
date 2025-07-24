@@ -43,24 +43,26 @@
     }
 
     /* Rotating box */
-    .flip-box {
-      width: 70rem;
-      height: 20rem;
-      transform-style: preserve-3d;
-      transition: transform 1s ease;
-      position: relative;
-      text-align: center;
-    }
+  .flip-box {
+  width: 90vw;      /* max 90% viewport width */
+  max-width: 70rem; /* never larger than original */
+  height: auto;     /* auto height for content */
+  aspect-ratio: 7 / 2; /* keep original ratio 70rem/20rem */
+  transform-style: preserve-3d;
+  transition: transform 1s ease;
+  position: relative;
+  text-align: center;
+}
 
-    .flip-face {
+.flip-face {
   position: absolute;
   width: 100%;
   height: 100%;
-  font-size: 2rem;
+  font-size: clamp(1rem, 2vw, 2rem);
   font-weight: 1000;
   color: #4cf3ff;
   background-size: 200% auto;
-  text-shadow: 0 2px 8px rgba(81, 197, 255, 0.5); /* Soft glow */
+  text-shadow: 0 2px 8px rgba(81, 197, 255, 0.5);
   letter-spacing: 1.5px;
   font-family: 'Segoe UI', 'Poppins', 'Helvetica Neue', sans-serif;
   text-transform: uppercase;
@@ -79,7 +81,7 @@
 
 .water-button {
   position: fixed; /* Change from relative to fixed */
-  bottom: 47px;     /* Distance from bottom */
+  bottom: 50px;     /* Distance from bottom */
   left: 50%;        /* Center horizontally */
   transform: translateX(-50%); /* True center alignment */
 
