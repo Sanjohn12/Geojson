@@ -549,13 +549,37 @@
   color: #fff;
 }
 
+button:hover,
 #locateBtn:hover,
 #findServiceBtn:hover,
 #reportServiceBtn:hover,
 #resetBtn:hover,
 #shareBtn:hover,
 #openSidebarBtn:hover {
-  background: linear-gradient(135deg, #008cbe, #00ffe1) !important;
+  animation: jellyGlow 0.5s ease-in-out forwards;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes jellyGlow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(11, 168, 241, 0);
+  }
+  30% {
+    transform: scale(1.15, 0.85);
+    box-shadow: 0 0 10px rgba(17, 180, 255, 0.6);
+  }
+  50% {
+    transform: scale(0.95, 1.05);
+  }
+  70% {
+    transform: scale(1.05, 0.95);
+  }
+  100% {
+    transform: scale(1.03, 1.03);
+    box-shadow: 0 0 12px rgba(9, 185, 255, 0.5);
+  }
 }
 
 .hover-marker-icon {
