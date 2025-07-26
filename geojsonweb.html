@@ -610,6 +610,29 @@ button:hover,
       opacity: 0;
     }
   }
+.leaflet-interactive.isochrone-polygon-style {
+  stroke-width: 3px;
+  stroke-dasharray: 12;
+  stroke-dashoffset: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.leaflet-interactive.isochrone-polygon-style:hover {
+  stroke: #ffffff;
+  stroke-width: 4px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 6px #00ffe1);
+  animation: dashRun 1.5s linear infinite;
+}
+
+@keyframes dashRun {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -40;
+  }
+}
 
   </style>
   
@@ -1229,13 +1252,15 @@ return;
     });
     const data = await res.json();
     isochroneLayer = L.geoJSON(data, {
-      style: {
-        color: '#FF0000',
-        weight: 4,
-        fillColor: '#00ffe1',
-        fillOpacity: 0.05,
-        dashArray: '6 4',
-      }
+       style: {
+       color: '#FF0077',         
+       weight: 3.5,             
+       fillColor: '#00FFE1',      
+       fillOpacity: 0.15,         
+       dashArray: '6 3',         
+       lineJoin: 'round',         
+       className: 'isochrone-polygon-style'
+        }
     }).addTo(map);
     countPointsInIsochrone(isochroneLayer);
   } catch (err) {
